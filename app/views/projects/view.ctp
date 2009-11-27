@@ -96,84 +96,84 @@
 			<?php echo $project['Project']['costs']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Ext. IT Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Ext It Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Ext. IT required']; ?>
+			<?php echo $project['Project']['emp_ext_it required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Ext. Man. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Ext Man Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Ext. Man. required']; ?>
+			<?php echo $project['Project']['emp_ext_man_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Ext. Org. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Ext Org Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Ext. Org. required']; ?>
+			<?php echo $project['Project']['emp_ext_org_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. IT Dev. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp It Dev Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. IT Dev. required']; ?>
+			<?php echo $project['Project']['emp_it dev_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Man. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Man Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Man. required']; ?>
+			<?php echo $project['Project']['emp_man_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Serv. Sav. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Serv Sav Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Serv. Sav. required']; ?>
+			<?php echo $project['Project']['emp_serv_sav_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Org. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Org Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Org. required']; ?>
+			<?php echo $project['Project']['emp_org_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Mark. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Mark Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Mark. required']; ?>
+			<?php echo $project['Project']['emp_mark_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. S&M Loans Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Sm Loans Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. S&M Loans required']; ?>
+			<?php echo $project['Project']['emp_sm loans_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Orig. Loans Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Orig Loans Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Orig. Loans required']; ?>
+			<?php echo $project['Project']['emp_orig_loans_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Serv. Loans Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Serv Loans Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Serv. Loans required']; ?>
+			<?php echo $project['Project']['emp_serv_loans_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. S&M Sav. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Sm Sav Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. S&M Sav. required']; ?>
+			<?php echo $project['Project']['emp_sm sav_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp. Orig. Sav. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Orig Sav Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Emp. Orig. Sav. required']; ?>
+			<?php echo $project['Project']['emp_orig_sav_required']; ?>
 			&nbsp;
 		</dd>
-		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Comm. Required'); ?></dt>
+		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Comm Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Comm. required']; ?>
+			<?php echo $project['Project']['comm_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Server Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Server required']; ?>
+			<?php echo $project['Project']['server_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Storage Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['Storage required']; ?>
+			<?php echo $project['Project']['storage_required']; ?>
 			&nbsp;
 		</dd>
 	</dl>

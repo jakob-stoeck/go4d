@@ -27,22 +27,22 @@ echo $paginator->counter(array(
 	<th><?php echo $paginator->sort('it_risk');?></th>
 	<th><?php echo $paginator->sort('it_information');?></th>
 	<th><?php echo $paginator->sort('costs');?></th>
-	<th><?php echo $paginator->sort('Emp. Ext. IT required');?></th>
-	<th><?php echo $paginator->sort('Emp. Ext. Man. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Ext. Org. required');?></th>
-	<th><?php echo $paginator->sort('Emp. IT Dev. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Man. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Serv. Sav. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Org. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Mark. required');?></th>
-	<th><?php echo $paginator->sort('Emp. S&M Loans required');?></th>
-	<th><?php echo $paginator->sort('Emp. Orig. Loans required');?></th>
-	<th><?php echo $paginator->sort('Emp. Serv. Loans required');?></th>
-	<th><?php echo $paginator->sort('Emp. S&M Sav. required');?></th>
-	<th><?php echo $paginator->sort('Emp. Orig. Sav. required');?></th>
-	<th><?php echo $paginator->sort('Comm. required');?></th>
-	<th><?php echo $paginator->sort('Server required');?></th>
-	<th><?php echo $paginator->sort('Storage required');?></th>
+	<th><?php echo $paginator->sort('emp_ext_it required');?></th>
+	<th><?php echo $paginator->sort('emp_ext_man_required');?></th>
+	<th><?php echo $paginator->sort('emp_ext_org_required');?></th>
+	<th><?php echo $paginator->sort('emp_it dev_required');?></th>
+	<th><?php echo $paginator->sort('emp_man_required');?></th>
+	<th><?php echo $paginator->sort('emp_serv_sav_required');?></th>
+	<th><?php echo $paginator->sort('emp_org_required');?></th>
+	<th><?php echo $paginator->sort('emp_mark_required');?></th>
+	<th><?php echo $paginator->sort('emp_sm loans_required');?></th>
+	<th><?php echo $paginator->sort('emp_orig_loans_required');?></th>
+	<th><?php echo $paginator->sort('emp_serv_loans_required');?></th>
+	<th><?php echo $paginator->sort('emp_sm sav_required');?></th>
+	<th><?php echo $paginator->sort('emp_orig_sav_required');?></th>
+	<th><?php echo $paginator->sort('comm_required');?></th>
+	<th><?php echo $paginator->sort('server_required');?></th>
+	<th><?php echo $paginator->sort('storage_required');?></th>
 	<th class="actions"><?php __('Actions');?></th>
 </tr>
 <?php
@@ -112,52 +112,52 @@ foreach ($projects as $project):
 			<?php echo $project['Project']['costs']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Ext. IT required']; ?>
+			<?php echo $project['Project']['emp_ext_it required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Ext. Man. required']; ?>
+			<?php echo $project['Project']['emp_ext_man_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Ext. Org. required']; ?>
+			<?php echo $project['Project']['emp_ext_org_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. IT Dev. required']; ?>
+			<?php echo $project['Project']['emp_it dev_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Man. required']; ?>
+			<?php echo $project['Project']['emp_man_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Serv. Sav. required']; ?>
+			<?php echo $project['Project']['emp_serv_sav_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Org. required']; ?>
+			<?php echo $project['Project']['emp_org_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Mark. required']; ?>
+			<?php echo $project['Project']['emp_mark_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. S&M Loans required']; ?>
+			<?php echo $project['Project']['emp_sm loans_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Orig. Loans required']; ?>
+			<?php echo $project['Project']['emp_orig_loans_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Serv. Loans required']; ?>
+			<?php echo $project['Project']['emp_serv_loans_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. S&M Sav. required']; ?>
+			<?php echo $project['Project']['emp_sm sav_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Emp. Orig. Sav. required']; ?>
+			<?php echo $project['Project']['emp_orig_sav_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Comm. required']; ?>
+			<?php echo $project['Project']['comm_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Server required']; ?>
+			<?php echo $project['Project']['server_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['Storage required']; ?>
+			<?php echo $project['Project']['storage_required']; ?>
 		</td>
 		<td class="actions">
 			<?php echo $html->link(__('View', true), array('action' => 'view', $project['Project']['id'])); ?>

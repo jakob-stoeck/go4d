@@ -22,22 +22,22 @@
 		echo $form->input('it_risk');
 		echo $form->input('it_information');
 		echo $form->input('costs');
-		echo $form->input('Emp. Ext. IT required');
-		echo $form->input('Emp. Ext. Man. required');
-		echo $form->input('Emp. Ext. Org. required');
-		echo $form->input('Emp. IT Dev. required');
-		echo $form->input('Emp. Man. required');
-		echo $form->input('Emp. Serv. Sav. required');
-		echo $form->input('Emp. Org. required');
-		echo $form->input('Emp. Mark. required');
-		echo $form->input('Emp. S&M Loans required');
-		echo $form->input('Emp. Orig. Loans required');
-		echo $form->input('Emp. Serv. Loans required');
-		echo $form->input('Emp. S&M Sav. required');
-		echo $form->input('Emp. Orig. Sav. required');
-		echo $form->input('Comm. required');
-		echo $form->input('Server required');
-		echo $form->input('Storage required');
+		echo $form->input('emp_ext_it required');
+		echo $form->input('emp_ext_man_required');
+		echo $form->input('emp_ext_org_required');
+		echo $form->input('emp_it dev_required');
+		echo $form->input('emp_man_required');
+		echo $form->input('emp_serv_sav_required');
+		echo $form->input('emp_org_required');
+		echo $form->input('emp_mark_required');
+		echo $form->input('emp_sm loans_required');
+		echo $form->input('emp_orig_loans_required');
+		echo $form->input('emp_serv_loans_required');
+		echo $form->input('emp_sm sav_required');
+		echo $form->input('emp_orig_sav_required');
+		echo $form->input('comm_required');
+		echo $form->input('server_required');
+		echo $form->input('storage_required');
 		echo $form->input('User');
 	?>
 	</fieldset>
