@@ -164,7 +164,11 @@ class Project extends AppModel {
 			$antiCrash++;
 			$addedInThisRound = 0;
 			
-			$diffProjects = array_diff($projects,$projectsAdded);
+			$diffProjects = array_udiff($projects,$projectsAdded,array('Project','_compareProjects'));
+//			debug(array(
+//				Set::combine($projects,'{n}.Project.id','{n}.Project.name'),
+//				Set::combine($projectsAdded,'{n}.Project.id','{n}.Project.name')
+//			));
 			
 			$projectIdsForRequirements = array();
 			for ($i = 0; $i < count($rounds)-1; $i++) {
@@ -186,7 +190,6 @@ class Project extends AppModel {
 				if (isset($relationsList[$p['Project']['id']])) {
 					$addIt = true;
 					foreach ($relationsList[$p['Project']['id']] as $r) {
-
 						if (($r['type']=='req') && (in_array($r['project_preceding_id'],$projectIdsForRequirements))) {
 							//do nothing, check other things.. 
 						}
@@ -210,13 +213,23 @@ class Project extends AppModel {
 					$addedInThisRound++;
 				}
 			}
-			if ($addedInThisRound==0) $curRound++;
+			
+			if (!$addedInThisRound) {
+				$curRound++;	
+			}
 		}
-		debug($rounds);
+//		debug($rounds);
+		foreach ($rounds as $rn => $round) {
+			debug('Round '.$rn);
+			debug(Set::combine($round,'{n}.Project.id','{n}.Project.name'));
+		}
 		
 	}
 	function linearizeProject($project) {
 		return (double) $project['costs'];
+	}
+	static function _compareProjects($p1,$p2) {
+		return ($p1['Project']['id']==$p2['Project']['id']) ? 0 : 1;
 	}
 }
 ?>

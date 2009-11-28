@@ -19,7 +19,6 @@ class ProjectsController extends AppController {
     }
 
 	function index() {
-		debug($this->Auth->user());
         $this->Project->recursive = 0;
         $this->set('projects', $this->paginate());
 	}
@@ -55,9 +54,8 @@ class ProjectsController extends AppController {
 			$this->ProjectsUsers->saveAll($savArr);
 			$savedCalculus = $this->Project->getBestPath($this->Auth->user('id'));
 		}
-		debug($savedCalculus);
+//		debug($savedCalculus);
 		$rounds = $this->Project->orderProjects($savedCalculus['projectIds']);
-		debug($rounds);
 	}
 	
 	function view($id = null) {
