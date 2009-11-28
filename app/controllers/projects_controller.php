@@ -26,11 +26,27 @@ class ProjectsController extends AppController {
 	
 	function plan() {
 		$this->ProjectsUsers->syncPuEntries($this->Auth->user('id'));
-		
 		$puProjects = $this->ProjectsUsers->find('all',array(
-			'conditions' => array('ProjectsUsers.user_id'=>$this->Auth->user('id'))
+			'conditions' => array('ProjectsUsers.user_id'=>$this->Auth->user('id')),
+			'order' => 'ProjectsUsers.project_id'
 		));
-		
+		$this->set(compact('puProjects'));
+	}
+	
+	function anaylze() {
+		if ($d =& $this->data) {
+			$savArr = array();
+			foreach ($d['ProjectsUsers'] as $project_id => $puArr) {
+				$savArr[] = array(
+					'user_id' => $this->Auth->user('id'),
+					'project_id' => $project_id,
+					'done' => $puArr['done'],
+					'wanted' => $puArr['wanted']
+				);
+			}
+			$this->ProjectsUsers->deleteAll(array('ProjectsUsers.user_id'=>$this->Auth->user('id')),false);
+			$this->ProjectsUsers->saveAll($savArr);
+		}
 	}
 	
 	function view($id = null) {

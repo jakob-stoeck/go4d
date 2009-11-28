@@ -19,15 +19,14 @@ class ProjectsUsers extends AppModel {
 		
 		$notYetThereProjectIds = array_diff($projectIds,$puProjectIds);
 
-		$savArr = array('ProjectsUsers'=>array());
+		$savArr = array();
 		foreach ($notYetThereProjectIds as $nytpid) {
-			$this->create();
-			$this->save(array(
+			$savArr[] = array(
 				'project_id' => $nytpid,
 				'user_id' => $userId,
-			));
+			);
 		}
-		
+		$this->saveAll($savArr);
 	}
 
 }

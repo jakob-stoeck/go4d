@@ -31,8 +31,12 @@
 		<?=$title_for_layout;?>
 	</title>
 	<?=$html->meta('icon');?>
+	<?=$html->css('cake.generic');?>
 	<?=$html->css('main');?>
 	<? $scripts_for_layout; ?>
+	<?=$javascript->link('prototype')?>
+	<?=$javascript->link('scriptaculous/scriptaculous')?>
+	<?=$javascript->link('zoomer')?>	
 </head>
 <body>
 	<div id="container">
