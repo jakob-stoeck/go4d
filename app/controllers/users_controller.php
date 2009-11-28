@@ -2,8 +2,14 @@
 class UsersController extends AppController {
 
 	var $name = 'Users';
-	var $helpers = array('Html', 'Form');
 
+
+	function login() {
+	}
+	function logout() {
+		$this->redirect($this->Auth->logout());
+	}
+	
 	function index() {
 		$this->User->recursive = 0;
 		$this->set('users', $this->paginate());
