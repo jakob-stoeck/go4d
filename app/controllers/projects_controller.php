@@ -3,10 +3,24 @@ class ProjectsController extends AppController {
 
 	var $name = 'Projects';
 	var $helpers = array('Html', 'Form');
+	var $uses = array('Project', 'Relation');
+
+    function graph() {
+        $projects = $this->Project->findAll(null, null, 'id ASC');
+
+        $projects = Set::combine($projects, '{n}.Project.id', '{n}.Project.name');
+        $relations = $this->Relation->findAll(null, null, 'project_preceding_id ASC');
+
+        $graphname = 'workpackages';
+
+	    $dot = $this->Project->dot($projects, $relations, $graphname);
+
+	    $this->set(compact('graphname'));
+    }
 
 	function index() {
-		$this->Project->recursive = 0;
-		$this->set('projects', $this->paginate());
+        $this->Project->recursive = 0;
+        $this->set('projects', $this->paginate());
 	}
 
 	function view($id = null) {

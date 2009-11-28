@@ -1,0 +1,1 @@
+<img src="/img/<?=$graphname?>.png" alt="Graph">
