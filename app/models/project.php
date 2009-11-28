@@ -121,25 +121,27 @@ class Project extends AppModel {
 	    lpsolve('solve',$lp);
 	    $lpObjective = lpsolve('get_objective',$lp);
 	    $lpVariables = lpsolve('get_variables',$lp);
+	    lpsolve('delete_lp',$lp);
+
+	    
 	    $neededProjectIds = array();
 	    foreach ($lpVariables[0] as $lpVar=>$needed) {
 	    	if ($needed) $neededProjectIds[] = $projects[$lpVar]['Project']['id'];
 	    } 
-	    lpsolve('delete_lp',$lp);
+	    
 //		debug($lpObjective);
 //		debug($lpVariables);
-		debug($neededProjectIds);
 		$savedCalculus = array(
 			'costs' => $lpObjective,
 			'projectIds' =>$neededProjectIds
 		);
-		debug($savedCalculus);
 		
 		App::import('Model','User'); $userClass = new User();
 		$userClass->save(array(
 			'id' => $userId,
 			'saved_calculus' => serialize($savedCalculus)
 		));
+		return $savedCalculus;
 	}
 	
 	function orderProjects($projectIds) {
@@ -153,11 +155,65 @@ class Project extends AppModel {
 			)
 		));
 		$rounds = array();
+		$relationsList = Set::combine($relations,'{n}.Relation.id','{n}.Relation','{n}.Relation.project_id');
 		
-		foreach ($projects as $p) {
+		$projectsAdded = array();
+		$curRound = 0;
+		$antiCrash = 0;
+		while (count($projectsAdded)< count($projectIds) && $antiCrash < 100) {
+			$antiCrash++;
+			$addedInThisRound = 0;
 			
+			$diffProjects = array_diff($projects,$projectsAdded);
+			
+			$projectIdsForRequirements = array();
+			for ($i = 0; $i < count($rounds)-1; $i++) {
+				foreach ($rounds[$i] as $roundProject) {
+					$projectIdsForRequirements[] = $roundProject['Project']['id'];
+				}
+			}
+			$projectIdsForRequirements = array_unique($projectIdsForRequirements);
+			
+			$projectIdsForConstraints = array();
+			for ($i = 0; $i < count($rounds); $i++) {
+				foreach ($rounds[$i] as $roundProject) {
+					$projectIdsForConstraints[] = $roundProject['Project']['id'];
+				}
+			}
+			$projectIdsForConstraints = array_unique($projectIdsForConstraints);
+			
+			foreach ($diffProjects as $p) {
+				if (isset($relationsList[$p['Project']['id']])) {
+					$addIt = true;
+					foreach ($relationsList[$p['Project']['id']] as $r) {
+
+						if (($r['type']=='req') && (in_array($r['project_preceding_id'],$projectIdsForRequirements))) {
+							//do nothing, check other things.. 
+						}
+						elseif (($r['type']=='constraint') && (in_array($r['project_preceding_id'],$projectIdsForConstraints))) {
+							//do nothing, check other things.. 
+						}
+						else {
+							$addIt = false;
+							break;
+						}							
+					}
+					if ($addIt) {
+						$rounds[$curRound][] = $p;
+						$projectsAdded[] = $p;
+						$addedInThisRound++;
+					}
+				}
+				else {
+					$rounds[$curRound][] = $p;
+					$projectsAdded[] = $p;
+					$addedInThisRound++;
+				}
+			}
+			if ($addedInThisRound==0) $curRound++;
 		}
-		debug($relations);
+		debug($rounds);
+		
 	}
 	function linearizeProject($project) {
 		return (double) $project['costs'];
