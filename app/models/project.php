@@ -160,7 +160,7 @@ class Project extends AppModel {
 		$projectsAdded = array();
 		$curRound = 0;
 		$antiCrash = 0;
-		while (count($projectsAdded)< count($projectIds) && $antiCrash < 100) {
+		while (count($projectsAdded)<= count($projectIds) && $antiCrash < 100) {
 			$antiCrash++;
 			$addedInThisRound = 0;
 			
@@ -169,22 +169,28 @@ class Project extends AppModel {
 //				Set::combine($projects,'{n}.Project.id','{n}.Project.name'),
 //				Set::combine($projectsAdded,'{n}.Project.id','{n}.Project.name')
 //			));
-			
+
+			//requirements: all projects from all rounds except the current
 			$projectIdsForRequirements = array();
-			for ($i = 0; $i < count($rounds)-1; $i++) {
-				foreach ($rounds[$i] as $roundProject) {
+			$requirementRounds = $rounds; if ($requirementRounds) array_pop($requirementRounds);
+			foreach ($requirementRounds as $rRound) {
+				foreach ($rRound as $roundProject) {
 					$projectIdsForRequirements[] = $roundProject['Project']['id'];
 				}
 			}
 			$projectIdsForRequirements = array_unique($projectIdsForRequirements);
-			
-			$projectIdsForConstraints = array();
-			for ($i = 0; $i < count($rounds); $i++) {
-				foreach ($rounds[$i] as $roundProject) {
+
+			//constraints: all projects from all rounds
+			$projectIdsForConstraints  = array();
+			$constraintRounds = $rounds;
+			foreach ($constraintRounds as $rRound) {
+				foreach ($rRound as $roundProject) {
 					$projectIdsForConstraints[] = $roundProject['Project']['id'];
 				}
 			}
 			$projectIdsForConstraints = array_unique($projectIdsForConstraints);
+			
+//			debug(compact('curRound','projectIdsForRequirements','projectIdsForConstraints','projectsAdded'));
 			
 			foreach ($diffProjects as $p) {
 				if (isset($relationsList[$p['Project']['id']])) {
@@ -215,7 +221,8 @@ class Project extends AppModel {
 			}
 			
 			if (!$addedInThisRound) {
-				$curRound++;	
+				$curRound++;
+				$rounds[$curRound] = array();	
 			}
 		}
 //		debug($rounds);
