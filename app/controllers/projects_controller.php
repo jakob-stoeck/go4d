@@ -3,7 +3,7 @@ class ProjectsController extends AppController {
 
 	var $name = 'Projects';
 	var $helpers = array('Html', 'Form');
-	var $uses = array('Project', 'Relation');
+	var $uses = array('Project', 'Relation','ProjectsUsers');
 
     function graph() {
         $projects = $this->Project->findAll(null, null, 'id ASC');
@@ -19,10 +19,37 @@ class ProjectsController extends AppController {
     }
 
 	function index() {
+		debug($this->Auth->user());
         $this->Project->recursive = 0;
         $this->set('projects', $this->paginate());
 	}
-
+	
+	function plan() {
+		$this->ProjectsUsers->syncPuEntries($this->Auth->user('id'));
+		$puProjects = $this->ProjectsUsers->find('all',array(
+			'conditions' => array('ProjectsUsers.user_id'=>$this->Auth->user('id')),
+			'order' => 'ProjectsUsers.project_id'
+		));
+		$this->set(compact('puProjects'));
+	}
+	
+	function analyze() {
+		if ($d =& $this->data) {
+			$savArr = array();
+			foreach ($d['ProjectsUsers'] as $project_id => $puArr) {
+				$savArr[] = array(
+					'user_id' => $this->Auth->user('id'),
+					'project_id' => $project_id,
+					'done' => $puArr['done'],
+					'wanted' => $puArr['wanted']
+				);
+			}
+			$this->ProjectsUsers->deleteAll(array('ProjectsUsers.user_id'=>$this->Auth->user('id')),false);
+			$this->ProjectsUsers->saveAll($savArr);
+		}
+		$projectIds = $this->Project->getBestPath($this->Auth->user('id'));
+	}
+	
 	function view($id = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid Project.', true));
