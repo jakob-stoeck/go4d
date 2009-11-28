@@ -64,7 +64,7 @@ class Project extends AppModel {
 //		create target function
 		$targetFunctionVector = array();
 		foreach ($projects as $project) {
-			$targetFunctionVector[] =  $project['ProjectsUsers']['done'] ? '0' : $this->linearizeProject($project['Project']);
+			$targetFunctionVector[] =  $project['ProjectsUsers']['done'] ? 1 : $this->linearizeProject($project['Project']);
 		}
 		
 //		create restrictions
@@ -94,10 +94,10 @@ class Project extends AppModel {
 		
 		debug($targetFunctionVector);
 		debug($restrictionsMatrix);
-		debug($inequalityArray);
 		debug($restrictionTargetArray);
+		debug($inequalityArray);
 		//generate lp...
-
+		
 		$lp = lp_maker($targetFunctionVector,$restrictionsMatrix,$restrictionTargetArray,$inequalityArray);
 		lpsolve('set_minim', $lp); //helper sets to maximize
 		
@@ -107,7 +107,7 @@ class Project extends AppModel {
 	    }
 		
 	    lpsolve('solve',$lp);
-	    $lpObjectives = lpsolve('get_objectives',$lp);
+	    $lpObjectives = lpsolve('get_objective',$lp);
 	    $lpVariables = lpsolve('get_variables',$lp);
 	    
 	    lpsolve('delete_lp',$lp);
@@ -118,7 +118,7 @@ class Project extends AppModel {
 	
 	
 	function linearizeProject($project) {
-		return $project['costs'];
+		return (double) $project['costs'];
 	}
 }
 ?>
