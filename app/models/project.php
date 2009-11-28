@@ -64,7 +64,7 @@ class Project extends AppModel {
 //		create target function
 		$targetFunctionVector = array();
 		foreach ($projects as $project) {
-			$targetFunctionVector[] =  $project['ProjectsUsers']['done'] ? 1 : $this->linearizeProject($project['Project']);
+			$targetFunctionVector[] =  $project['ProjectsUsers']['done'] ? 0.0 : $this->linearizeProject($project['Project']);
 		}
 		
 //		create restrictions
@@ -73,10 +73,10 @@ class Project extends AppModel {
 			$specificRestrArr = array();
 			foreach($projects as $project) {
 				if ($relation['Relation']['project_preceding_id']==$project['Project']['id']) {
-					$specificRestrArr[] = -1;
+					$specificRestrArr[] = 1;
 				}
 				elseif ($relation['Relation']['project_id']==$project['Project']['id']) {
-					$specificRestrArr[] = 1;
+					$specificRestrArr[] = -1;
 				}
 				else {
 					$specificRestrArr[] = 0;
@@ -91,29 +91,49 @@ class Project extends AppModel {
 			$restrictionTargetArray[] = 0;
 		} 
 
+		//add now all things we want and we have.. XXX extend all 3 arrays!
+		foreach ($projects as $vectorId => $project) {
+			if ($project['ProjectsUsers']['done'] || $project['ProjectsUsers']['wanted']) {
+				$specificRestrArr = array();
+				for ($i = 0; $i< count($projects); $i++) {
+					$specificRestrArr[] = ($i == $vectorId) ? 1 : 0;
+				}				
+				$restrictionsMatrix[] = $specificRestrArr;
+				$inequalityArray[] = 0;
+				$restrictionTargetArray[] = 1;
+			}
+		}
 		
-		debug($targetFunctionVector);
-		debug($restrictionsMatrix);
-		debug($restrictionTargetArray);
-		debug($inequalityArray);
+//		debug($targetFunctionVector);
+//		debug($restrictionsMatrix);
+//		debug($restrictionTargetArray);
+//		debug($inequalityArray);
 		//generate lp...
 		
 		$lp = lp_maker($targetFunctionVector,$restrictionsMatrix,$restrictionTargetArray,$inequalityArray);
 		lpsolve('set_minim', $lp); //helper sets to maximize
 		
 		//recycle inequalityArray for setting the binary vars..
-	    for ($i = 0; $i < count($inequalityArray); $i++) {
-		    lpsolve('set_binary', $lp, $inequalityArray[$i], 1);
+	    for ($i = 0; $i < count($restrictionsMatrix[0]); $i++) {
+		    lpsolve('set_binary', $lp, 1, 1);
 	    }
 		
 	    lpsolve('solve',$lp);
-	    $lpObjectives = lpsolve('get_objective',$lp);
+	    $lpObjective = lpsolve('get_objective',$lp);
 	    $lpVariables = lpsolve('get_variables',$lp);
-	    
+	    $neededProjectIds = array();
+	    foreach ($lpVariables[0] as $lpVar=>$needed) {
+	    	if ($needed) $neededProjectIds[] = $projects[$lpVar]['Project']['id'];
+	    } 
 	    lpsolve('delete_lp',$lp);
-		debug($lpObjectives);
-		debug($lpVariables);
-		
+//		debug($lpObjective);
+//		debug($lpVariables);
+		debug($neededProjectIds);
+		$savedCalculus = array(
+			'costs' => $lpObjective,
+			'projectIds' =>$neededProjectIds
+		);
+		debug($savedCalculus);
 	}
 	
 	

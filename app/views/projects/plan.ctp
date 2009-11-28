@@ -6,7 +6,7 @@
 	array('id'=>'zoomProject'),false,false
 )?>
 </div>
-<?=$form->create(null, array('url' => '/projects/anaylze')); ?>
+<?=$form->create(null, array('url' => '/projects/analyze')); ?>
 <table>
 <?=$html->tableHeaders(array('Projekt','Name','Kosten','Erledigt','Gewünscht'));?>
 <?
