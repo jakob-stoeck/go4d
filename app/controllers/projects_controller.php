@@ -33,7 +33,7 @@ class ProjectsController extends AppController {
 		$this->set(compact('puProjects'));
 	}
 	
-	function anaylze() {
+	function analyze() {
 		if ($d =& $this->data) {
 			$savArr = array();
 			foreach ($d['ProjectsUsers'] as $project_id => $puArr) {
@@ -47,6 +47,7 @@ class ProjectsController extends AppController {
 			$this->ProjectsUsers->deleteAll(array('ProjectsUsers.user_id'=>$this->Auth->user('id')),false);
 			$this->ProjectsUsers->saveAll($savArr);
 		}
+		$projectIds = $this->Project->getBestPath($this->Auth->user('id'));
 	}
 	
 	function view($id = null) {
