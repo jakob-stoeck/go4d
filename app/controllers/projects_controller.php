@@ -3,7 +3,7 @@ class ProjectsController extends AppController {
 
 	var $name = 'Projects';
 	var $helpers = array('Html', 'Form');
-	var $uses = array('Project', 'Relation','ProjectsUsers');
+	var $uses = array('Project', 'Relation','ProjectsUsers','User');
 
     function graph() {
         $projects = $this->Project->findAll(null, null, 'id ASC');
@@ -34,6 +34,13 @@ class ProjectsController extends AppController {
 	}
 	
 	function analyze() {
+		$user = $this->User->find('first',array(
+			'conditions'=>array('User.id'=>$this->Auth->user('id')),
+			'recursive' => -1
+		));
+
+		$savedCalculus = unserialize($user['User']['saved_calculus']);
+		
 		if ($d =& $this->data) {
 			$savArr = array();
 			foreach ($d['ProjectsUsers'] as $project_id => $puArr) {
@@ -46,8 +53,11 @@ class ProjectsController extends AppController {
 			}
 			$this->ProjectsUsers->deleteAll(array('ProjectsUsers.user_id'=>$this->Auth->user('id')),false);
 			$this->ProjectsUsers->saveAll($savArr);
+			$savedCalculus = $this->Project->getBestPath($this->Auth->user('id'));
 		}
-		$projectIds = $this->Project->getBestPath($this->Auth->user('id'));
+		debug($savedCalculus);
+		$rounds = $this->Project->orderProjects($savedCalculus['projectIds']);
+		debug($rounds);
 	}
 	
 	function view($id = null) {

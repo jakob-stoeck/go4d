@@ -134,9 +134,31 @@ class Project extends AppModel {
 			'projectIds' =>$neededProjectIds
 		);
 		debug($savedCalculus);
+		
+		App::import('Model','User'); $userClass = new User();
+		$userClass->save(array(
+			'id' => $userId,
+			'saved_calculus' => serialize($savedCalculus)
+		));
 	}
 	
-	
+	function orderProjects($projectIds) {
+		App::import('Model','Relation'); $relationClass = new Relation();
+		
+		$projects = $this->find('all',array('conditions'=> array('Project.id'=>$projectIds)));
+		$relations = $relationClass->find('all',array(
+			'conditions'=>array(
+				'Relation.project_id' =>$projectIds,
+				'Relation.project_preceding_id' =>$projectIds
+			)
+		));
+		$rounds = array();
+		
+		foreach ($projects as $p) {
+			
+		}
+		debug($relations);
+	}
 	function linearizeProject($project) {
 		return (double) $project['costs'];
 	}
