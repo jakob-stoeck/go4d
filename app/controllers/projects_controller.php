@@ -109,6 +109,15 @@ class ProjectsController extends AppController {
 		$this->set(compact('rounds','orderedTableData'));
 	}
 	function _orderForAnalyzeTable($rounds) {
+		
+		$doneProjectIds = $this->ProjectsUsers->find('list',array(
+			'conditions' => array(
+				'ProjectsUsers.user_id'=>$this->Auth->user('id'),
+				'ProjectsUsers.done' => 1,
+			),
+			'fields' => array('ProjectsUsers.project_id')
+		));
+		
 		$details = array_keys($rounds[0][0]['Project']);
 		
 		$tableHeader = array('Runde');
@@ -122,26 +131,40 @@ class ProjectsController extends AppController {
 				$detailValues = array();
 				foreach ($round as $project) {
 					if ($detail == 'id') {
-						$detailValues[] = 'WP000'.$project['Project'][$detail];
+						$detailValues[$project['Project']['id']] = '<span class="projectNotDone">WP000'.$project['Project'][$detail].'</span>';
 					}
 					elseif ($detail=="name") {
-						$detailValues[] = substr($project['Project'][$detail],0,20).'&hellip;';
+						$detailValues[$project['Project']['id']] = '<span class="projectNotDone" title="'.$project['Project'][$detail].'">'.substr($project['Project'][$detail],0,20).'&hellip;</span>';
 					}
 					else {
-						$detailValues[] = $project['Project'][$detail];
+						$detailValues[$project['Project']['id']] = $project['Project'][$detail];
 					}
 				}
 //				debug($detailValues);
 				
-				$detailOutput = null;
+				$detailOutput = null; $correctedDetailOutput = null;
 				if (is_numeric(reset($detailValues))) {
 					$detailOutput = 0;
-					foreach ($detailValues as $dv) $detailOutput += $dv;
+					foreach ($detailValues as $pId =>$dv) {
+						$detailOutput += $dv;
+						if (!in_array($pId,$doneProjectIds)) $correctedDetailOutput += $dv;
+					}
+					$tableRow[] = 	'<span class="projectNotDone">'.$correctedDetailOutput.'</span> '.
+									'<span class="projectDone">('.($detailOutput-$correctedDetailOutput).')</span>';
 				}
 				else {
-					$detailOutput = implode(', ',$detailValues);
+					$correctedDetailOutput = array();
+					foreach ($detailValues as $pId =>$dv) {
+						if (in_array($pId,$doneProjectIds)) {
+							$correctedDetailOutput[] = str_replace('class="projectNotDone"','class="projectDone"',$dv);
+						}
+						else {
+							$correctedDetailOutput[] = $dv;
+						}
+					}
+					$tableRow[] = implode(', ',$correctedDetailOutput);
 				}
-				$tableRow[] = $detailOutput;
+//				$tableRow[] = $detailOutput;
 	//			$tableRow[] = implode($detailValues,', ');
 					
 			}
