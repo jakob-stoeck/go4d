@@ -98,7 +98,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Ext It Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['emp_ext_it required']; ?>
+			<?php echo $project['Project']['emp_ext_it_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Ext Man Required'); ?></dt>
@@ -113,7 +113,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp It Dev Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['emp_it dev_required']; ?>
+			<?php echo $project['Project']['emp_it_dev_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Man Required'); ?></dt>
@@ -138,7 +138,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Sm Loans Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['emp_sm loans_required']; ?>
+			<?php echo $project['Project']['emp_sm_loans_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Orig Loans Required'); ?></dt>
@@ -153,7 +153,7 @@
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Sm Sav Required'); ?></dt>
 		<dd<?php if ($i++ % 2 == 0) echo $class;?>>
-			<?php echo $project['Project']['emp_sm sav_required']; ?>
+			<?php echo $project['Project']['emp_sm_sav_required']; ?>
 			&nbsp;
 		</dd>
 		<dt<?php if ($i % 2 == 0) echo $class;?>><?php __('Emp Orig Sav Required'); ?></dt>
@@ -184,83 +184,5 @@
 		<li><?php echo $html->link(__('Delete Project', true), array('action' => 'delete', $project['Project']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $project['Project']['id'])); ?> </li>
 		<li><?php echo $html->link(__('List Projects', true), array('action' => 'index')); ?> </li>
 		<li><?php echo $html->link(__('New Project', true), array('action' => 'add')); ?> </li>
-		<li><?php echo $html->link(__('List Relations', true), array('controller' => 'relations', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New Relation', true), array('controller' => 'relations', 'action' => 'add')); ?> </li>
-		<li><?php echo $html->link(__('List Users', true), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New User', true), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
-</div>
-<div class="related">
-	<h3><?php __('Related Relations');?></h3>
-	<?php if (!empty($project['Relation'])):?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php __('Id'); ?></th>
-		<th><?php __('Project Preceding Id'); ?></th>
-		<th><?php __('Project Id'); ?></th>
-		<th><?php __('Type'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($project['Relation'] as $relation):
-			$class = null;
-			if ($i++ % 2 == 0) {
-				$class = ' class="altrow"';
-			}
-		?>
-		<tr<?php echo $class;?>>
-			<td><?php echo $relation['id'];?></td>
-			<td><?php echo $relation['project_preceding_id'];?></td>
-			<td><?php echo $relation['project_id'];?></td>
-			<td><?php echo $relation['type'];?></td>
-			<td class="actions">
-				<?php echo $html->link(__('View', true), array('controller' => 'relations', 'action' => 'view', $relation['id'])); ?>
-				<?php echo $html->link(__('Edit', true), array('controller' => 'relations', 'action' => 'edit', $relation['id'])); ?>
-				<?php echo $html->link(__('Delete', true), array('controller' => 'relations', 'action' => 'delete', $relation['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $relation['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $html->link(__('New Relation', true), array('controller' => 'relations', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
-</div>
-<div class="related">
-	<h3><?php __('Related Users');?></h3>
-	<?php if (!empty($project['User'])):?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php __('Id'); ?></th>
-		<th class="actions"><?php __('Actions');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($project['User'] as $user):
-			$class = null;
-			if ($i++ % 2 == 0) {
-				$class = ' class="altrow"';
-			}
-		?>
-		<tr<?php echo $class;?>>
-			<td><?php echo $user['id'];?></td>
-			<td class="actions">
-				<?php echo $html->link(__('View', true), array('controller' => 'users', 'action' => 'view', $user['id'])); ?>
-				<?php echo $html->link(__('Edit', true), array('controller' => 'users', 'action' => 'edit', $user['id'])); ?>
-				<?php echo $html->link(__('Delete', true), array('controller' => 'users', 'action' => 'delete', $user['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $user['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
-
-	<div class="actions">
-		<ul>
-			<li><?php echo $html->link(__('New User', true), array('controller' => 'users', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
 </div>

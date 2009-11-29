@@ -22,23 +22,22 @@
 		echo $form->input('it_risk');
 		echo $form->input('it_information');
 		echo $form->input('costs');
-		echo $form->input('emp_ext_it required');
+		echo $form->input('emp_ext_it_required');
 		echo $form->input('emp_ext_man_required');
 		echo $form->input('emp_ext_org_required');
-		echo $form->input('emp_it dev_required');
+		echo $form->input('emp_it_dev_required');
 		echo $form->input('emp_man_required');
 		echo $form->input('emp_serv_sav_required');
 		echo $form->input('emp_org_required');
 		echo $form->input('emp_mark_required');
-		echo $form->input('emp_sm loans_required');
+		echo $form->input('emp_sm_loans_required');
 		echo $form->input('emp_orig_loans_required');
 		echo $form->input('emp_serv_loans_required');
-		echo $form->input('emp_sm sav_required');
+		echo $form->input('emp_sm_sav_required');
 		echo $form->input('emp_orig_sav_required');
 		echo $form->input('comm_required');
 		echo $form->input('server_required');
 		echo $form->input('storage_required');
-		echo $form->input('User');
 	?>
 	</fieldset>
 <?php echo $form->end('Submit');?>
@@ -47,9 +46,5 @@
 	<ul>
 		<li><?php echo $html->link(__('Delete', true), array('action' => 'delete', $form->value('Project.id')), null, sprintf(__('Are you sure you want to delete # %s?', true), $form->value('Project.id'))); ?></li>
 		<li><?php echo $html->link(__('List Projects', true), array('action' => 'index'));?></li>
-		<li><?php echo $html->link(__('List Relations', true), array('controller' => 'relations', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New Relation', true), array('controller' => 'relations', 'action' => 'add')); ?> </li>
-		<li><?php echo $html->link(__('List Users', true), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New User', true), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

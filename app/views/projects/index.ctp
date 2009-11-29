@@ -27,18 +27,18 @@ echo $paginator->counter(array(
 	<th><?php echo $paginator->sort('it_risk');?></th>
 	<th><?php echo $paginator->sort('it_information');?></th>
 	<th><?php echo $paginator->sort('costs');?></th>
-	<th><?php echo $paginator->sort('emp_ext_it required');?></th>
+	<th><?php echo $paginator->sort('emp_ext_it_required');?></th>
 	<th><?php echo $paginator->sort('emp_ext_man_required');?></th>
 	<th><?php echo $paginator->sort('emp_ext_org_required');?></th>
-	<th><?php echo $paginator->sort('emp_it dev_required');?></th>
+	<th><?php echo $paginator->sort('emp_it_dev_required');?></th>
 	<th><?php echo $paginator->sort('emp_man_required');?></th>
 	<th><?php echo $paginator->sort('emp_serv_sav_required');?></th>
 	<th><?php echo $paginator->sort('emp_org_required');?></th>
 	<th><?php echo $paginator->sort('emp_mark_required');?></th>
-	<th><?php echo $paginator->sort('emp_sm loans_required');?></th>
+	<th><?php echo $paginator->sort('emp_sm_loans_required');?></th>
 	<th><?php echo $paginator->sort('emp_orig_loans_required');?></th>
 	<th><?php echo $paginator->sort('emp_serv_loans_required');?></th>
-	<th><?php echo $paginator->sort('emp_sm sav_required');?></th>
+	<th><?php echo $paginator->sort('emp_sm_sav_required');?></th>
 	<th><?php echo $paginator->sort('emp_orig_sav_required');?></th>
 	<th><?php echo $paginator->sort('comm_required');?></th>
 	<th><?php echo $paginator->sort('server_required');?></th>
@@ -112,7 +112,7 @@ foreach ($projects as $project):
 			<?php echo $project['Project']['costs']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['emp_ext_it required']; ?>
+			<?php echo $project['Project']['emp_ext_it_required']; ?>
 		</td>
 		<td>
 			<?php echo $project['Project']['emp_ext_man_required']; ?>
@@ -121,7 +121,7 @@ foreach ($projects as $project):
 			<?php echo $project['Project']['emp_ext_org_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['emp_it dev_required']; ?>
+			<?php echo $project['Project']['emp_it_dev_required']; ?>
 		</td>
 		<td>
 			<?php echo $project['Project']['emp_man_required']; ?>
@@ -136,7 +136,7 @@ foreach ($projects as $project):
 			<?php echo $project['Project']['emp_mark_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['emp_sm loans_required']; ?>
+			<?php echo $project['Project']['emp_sm_loans_required']; ?>
 		</td>
 		<td>
 			<?php echo $project['Project']['emp_orig_loans_required']; ?>
@@ -145,7 +145,7 @@ foreach ($projects as $project):
 			<?php echo $project['Project']['emp_serv_loans_required']; ?>
 		</td>
 		<td>
-			<?php echo $project['Project']['emp_sm sav_required']; ?>
+			<?php echo $project['Project']['emp_sm_sav_required']; ?>
 		</td>
 		<td>
 			<?php echo $project['Project']['emp_orig_sav_required']; ?>
@@ -176,9 +176,5 @@ foreach ($projects as $project):
 <div class="actions">
 	<ul>
 		<li><?php echo $html->link(__('New Project', true), array('action' => 'add')); ?></li>
-		<li><?php echo $html->link(__('List Relations', true), array('controller' => 'relations', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New Relation', true), array('controller' => 'relations', 'action' => 'add')); ?> </li>
-		<li><?php echo $html->link(__('List Users', true), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $html->link(__('New User', true), array('controller' => 'users', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
