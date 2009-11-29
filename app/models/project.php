@@ -156,6 +156,7 @@ class Project extends AppModel {
 		));
 		$rounds = array();
 		$relationsList = Set::combine($relations,'{n}.Relation.id','{n}.Relation','{n}.Relation.project_id');
+
 		
 		$projectsAdded = array();
 		$curRound = 0;
@@ -165,6 +166,7 @@ class Project extends AppModel {
 			$addedInThisRound = 0;
 			
 			$diffProjects = array_udiff($projects,$projectsAdded,array('Project','_compareProjects'));
+			
 //			debug(array(
 //				Set::combine($projects,'{n}.Project.id','{n}.Project.name'),
 //				Set::combine($projectsAdded,'{n}.Project.id','{n}.Project.name')
@@ -172,13 +174,15 @@ class Project extends AppModel {
 
 			//requirements: all projects from all rounds except the current
 			$projectIdsForRequirements = array();
-			$requirementRounds = $rounds; if ($requirementRounds) array_pop($requirementRounds);
-			foreach ($requirementRounds as $rRound) {
-				foreach ($rRound as $roundProject) {
-					$projectIdsForRequirements[] = $roundProject['Project']['id'];
+			if ($rounds) {
+				$requirementRounds = $rounds; array_pop($requirementRounds);
+				foreach ($requirementRounds as $rRound) {
+					foreach ($rRound as $roundProject) {
+						$projectIdsForRequirements[] = $roundProject['Project']['id'];
+					}
 				}
+				$projectIdsForRequirements = array_unique($projectIdsForRequirements);
 			}
-			$projectIdsForRequirements = array_unique($projectIdsForRequirements);
 
 			//constraints: all projects from all rounds
 			$projectIdsForConstraints  = array();
@@ -190,7 +194,7 @@ class Project extends AppModel {
 			}
 			$projectIdsForConstraints = array_unique($projectIdsForConstraints);
 			
-//			debug(compact('curRound','projectIdsForRequirements','projectIdsForConstraints','projectsAdded'));
+//			debug(compact('curRound','projectIdsForRequirements','projectIdsForConstraints'));
 			
 			foreach ($diffProjects as $p) {
 				if (isset($relationsList[$p['Project']['id']])) {
@@ -198,11 +202,14 @@ class Project extends AppModel {
 					foreach ($relationsList[$p['Project']['id']] as $r) {
 						if (($r['type']=='req') && (in_array($r['project_preceding_id'],$projectIdsForRequirements))) {
 							//do nothing, check other things.. 
+//							debug(array('req'=>array($p['Project']['id'],$antiCrash)));
 						}
 						elseif (($r['type']=='constraint') && (in_array($r['project_preceding_id'],$projectIdsForConstraints))) {
+//						debug(array('constr'=>array($p['Project']['id'],$antiCrash)));
 							//do nothing, check other things.. 
 						}
 						else {
+//							debug(array('break'=>array($p['Project']['id'],$antiCrash)));
 							$addIt = false;
 							break;
 						}							
@@ -214,6 +221,7 @@ class Project extends AppModel {
 					}
 				}
 				else {
+//					debug(array('nothing?'=>array($p['Project']['id'],$antiCrash)));
 					$rounds[$curRound][] = $p;
 					$projectsAdded[] = $p;
 					$addedInThisRound++;
@@ -227,6 +235,7 @@ class Project extends AppModel {
 				$curRound++;
 				$rounds[$curRound] = array();	
 			}
+//			debug($addedInThisRound);
 		}
 
 //		foreach ($rounds as $rn => $round) {
