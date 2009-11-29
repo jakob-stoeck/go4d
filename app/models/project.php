@@ -221,20 +221,35 @@ class Project extends AppModel {
 			}
 			
 			if (!$addedInThisRound) {
+//				$rounds[$curRound] = array_unique($rounds[$curRound]);
+
+				$rounds[$curRound] = $this->_removeDuplicates($rounds[$curRound]);
 				$curRound++;
 				$rounds[$curRound] = array();	
 			}
 		}
-//		debug($rounds);
-		foreach ($rounds as $rn => $round) {
-			debug('Round '.$rn);
-			debug(Set::combine($round,'{n}.Project.id','{n}.Project.name'));
-		}
+
+//		foreach ($rounds as $rn => $round) {
+//			debug('Round '.$rn);
+//			debug(Set::combine($round,'{n}.Project.id','{n}.Project.name'));
+//		}
+		return $rounds;
 		
 	}
 	function linearizeProject($project) {
 		return (double) $project['costs'];
 	}
+
+	function _removeDuplicates($projects) {
+		$revArr = array();
+		foreach ($projects as $k=>$project) $revArr[$project['Project']['id']] = $k;
+		$newArr = array();
+		foreach ($revArr as $k) {
+			$newArr[] = $projects[$k];
+		}
+		return $newArr;
+	}
+
 	static function _compareProjects($p1,$p2) {
 		return ($p1['Project']['id']==$p2['Project']['id']) ? 0 : 1;
 	}

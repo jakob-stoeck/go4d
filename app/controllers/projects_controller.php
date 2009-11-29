@@ -56,7 +56,52 @@ class ProjectsController extends AppController {
 		}
 //		debug($savedCalculus);
 		$rounds = $this->Project->orderProjects($savedCalculus['projectIds']);
+//		debug($rounds);
+		$orderedTableData = $this->_orderForAnalyzeTable($rounds);
+		$this->set(compact('rounds','orderedTableData'));
 	}
+	function _orderForAnalyzeTable($rounds) {
+		$details = array_keys($rounds[0][0]['Project']);
+		
+		$tableHeader = array('Runde');
+		$tableCells = array();
+		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr+1;
+		
+		foreach ($details as $detail) {
+			$tableRow = array($detail);
+			
+			foreach ($rounds as $round) {
+				$detailValues = array();
+				foreach ($round as $project) {
+					if ($detail == 'id') {
+						$detailValues[] = 'WP000'.$project['Project'][$detail];
+					}
+					elseif ($detail=="name") {
+						$detailValues[] = substr($project['Project'][$detail],0,20).'&hellip;';
+					}
+					else {
+						$detailValues[] = $project['Project'][$detail];
+					}
+				}
+//				debug($detailValues);
+				
+				$detailOutput = null;
+				if (is_numeric(reset($detailValues))) {
+					$detailOutput = 0;
+					foreach ($detailValues as $dv) $detailOutput += $dv;
+				}
+				else {
+					$detailOutput = implode(', ',$detailValues);
+				}
+				$tableRow[] = $detailOutput;
+	//			$tableRow[] = implode($detailValues,', ');
+					
+			}
+			
+			$tableCells[] = $tableRow;
+		}
+		return compact('tableHeader','tableCells');		
+	}	
 	
 	function view($id = null) {
 		if (!$id) {
