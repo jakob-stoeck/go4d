@@ -54,7 +54,6 @@ class ProjectsController extends AppController {
 			$this->ProjectsUsers->saveAll($savArr);
 			$savedCalculus = $this->Project->getBestPath($this->Auth->user('id'));
 		}
-		
 		$rounds = $this->Project->orderProjects($savedCalculus['projectIds']);
 //		debug($rounds);
 		$orderedTableData = $this->_orderForAnalyzeTable($rounds);
