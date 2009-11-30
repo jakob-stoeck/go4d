@@ -28,7 +28,7 @@ class Project extends AppModel {
         $data = 'digraph ' . $graphname . ' {'."\n";
 
         foreach($projects as $id => $name) {
-            $data .= $id . ' [label="' . $name . '"]'."\n";
+            $data .= $id . ' [label="' . $id . ': ' . $name . '"]'."\n";
         }
 
         foreach($relations as $r) {
