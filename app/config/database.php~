@@ -5,9 +5,9 @@ class DATABASE_CONFIG {
 		'driver' => 'mysqli',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'go4d',
-		'password' => 'go4d',
-		'database' => 'go4d',
+		'login' => 'root',
+		'password' => 'root',
+		'database' => 'go4c',
 	);
 }
 ?>
