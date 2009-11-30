@@ -60,19 +60,23 @@ class ProjectsController extends AppController {
 		}
 	}
 
-    function graph() {
+    function graph($filtertype = null) {
         $projects = $this->Project->findAll(null, null, 'id ASC');
 
         $projects = Set::combine($projects, '{n}.Project.id', '{n}.Project.name');
         $relations = $this->Relation->findAll(null, null, 'project_preceding_id ASC');
 
-        $graphname = 'workpackages';
-
-	    $dot = $this->Project->dot($projects, $relations, $graphname);
-
-	    $this->set(compact('graphname'));
+        
+        $user = $this->User->find('first',array(
+			'conditions'=>array('User.id'=>$this->Auth->user('id')),
+			'recursive' => -1
+		));
+		$savedCalculus = unserialize($user['User']['saved_calculus']);
+	    $dot = $this->Project->dot($projects, $relations, $this->Auth->user('id'),$savedCalculus['projectIds'],$filtertype);
+	    $this->set(array('graphFilename'=>$this->Auth->user('id')));
     }
-	function plan() {
+
+    function plan() {
 		$this->ProjectsUsers->syncPuEntries($this->Auth->user('id'));
 		$puProjects = $this->ProjectsUsers->find('all',array(
 			'conditions' => array('ProjectsUsers.user_id'=>$this->Auth->user('id')),
@@ -175,11 +179,11 @@ class ProjectsController extends AppController {
 			foreach ($rounds as $round) {
 				$detailValues = array();
 				foreach ($round as $project) {
-					if ($detail == 'id') {
-						$detailValues[$project['Project']['id']] = '<span class="projectNotDone">WP000'.$project['Project'][$detail].'</span>';
+					if ($detail=="name") {
+						$detailValues[$project['Project']['id']] = substr($project['Project'][$detail],0,20).'&hellip;';
 					}
-					elseif ($detail=="name") {
-						$detailValues[$project['Project']['id']] = '<span class="projectNotDone" title="'.$project['Project'][$detail].'">'.substr($project['Project'][$detail],0,20).'&hellip;</span>';
+					elseif ($detail=="id") {
+						$detailValues[$project['Project']['id']] = 'WP00'.$project['Project'][$detail];
 					}
 					else {
 						$detailValues[$project['Project']['id']] = $project['Project'][$detail];
@@ -201,10 +205,6 @@ class ProjectsController extends AppController {
 				}
 			}
 
-
-//			$tableRow[] = '
-//Sparky
-//			';
 
 			if ($sparklineArr) {
 				$max = max($sparklineArr) < 10 ? 10 : max($sparklineArr);
