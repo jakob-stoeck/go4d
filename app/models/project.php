@@ -156,95 +156,64 @@ class Project extends AppModel {
 		));
 		$rounds = array();
 		$relationsList = Set::combine($relations,'{n}.Relation.id','{n}.Relation','{n}.Relation.project_id');
-
 		
-		$projectsAdded = array();
-		$curRound = 0;
+		$usedProjects = array();
+		$projectsOfCurrentRound = array();
 		$antiCrash = 0;
-		while (count($projectsAdded)<= count($projectIds) && $antiCrash < 100) {
-			$antiCrash++;
-			$addedInThisRound = 0;
+		while ((count($usedProjects) < count($projectIds)) && ($antiCrash++ < 100)) {
 			
-			$diffProjects = array_udiff($projects,$projectsAdded,array('Project','_compareProjects'));
+			$diffProjects = array_udiff(
+				$projects,array_merge($usedProjects,$projectsOfCurrentRound),
+				array('Project','_compareProjects'));
 			
+			$projectIdsForReqs = Set::extract($usedProjects,'{n}.Project.id');
+			$projectIdsForConstraints = array_merge(
+				Set::extract($usedProjects,'{n}.Project.id'),
+				Set::extract($projectsOfCurrentRound,'{n}.Project.id')
+			);
+			
+			$oldProjectsOfCurrentRoundCounter = count($projectsOfCurrentRound);
+//			debug(Set::extract($diffProjects,'{n}.Project.id'));
 //			debug(array(
-//				Set::combine($projects,'{n}.Project.id','{n}.Project.name'),
-//				Set::combine($projectsAdded,'{n}.Project.id','{n}.Project.name')
+//				'u'=>Set::extract($usedProjects,'{n}.Project.id'),
+//				'cr' => Set::extract($projectsOfCurrentRound,'{n}.Project.id'),
+//				'merge' => Set::extract(array_merge($usedProjects,$projectsOfCurrentRound),'{n}.Project.id'),
+//				'diff' => Set::extract($diffProjects,'{n}.Project.id')
 //			));
-
-			//requirements: all projects from all rounds except the current
-			$projectIdsForRequirements = array();
-			if ($rounds) {
-				$requirementRounds = $rounds; array_pop($requirementRounds);
-				foreach ($requirementRounds as $rRound) {
-					foreach ($rRound as $roundProject) {
-						$projectIdsForRequirements[] = $roundProject['Project']['id'];
-					}
-				}
-				$projectIdsForRequirements = array_unique($projectIdsForRequirements);
-			}
-
-			//constraints: all projects from all rounds
-			$projectIdsForConstraints  = array();
-			$constraintRounds = $rounds;
-			foreach ($constraintRounds as $rRound) {
-				foreach ($rRound as $roundProject) {
-					$projectIdsForConstraints[] = $roundProject['Project']['id'];
-				}
-			}
-			$projectIdsForConstraints = array_unique($projectIdsForConstraints);
 			
-//			debug(compact('curRound','projectIdsForRequirements','projectIdsForConstraints'));
-			
-			foreach ($diffProjects as $p) {
-				if (isset($relationsList[$p['Project']['id']])) {
-					$addIt = true;
-					foreach ($relationsList[$p['Project']['id']] as $r) {
-						if (($r['type']=='req') && (in_array($r['project_preceding_id'],$projectIdsForRequirements))) {
-							//do nothing, check other things.. 
-//							debug(array('req'=>array($p['Project']['id'],$antiCrash)));
-						}
-						elseif (($r['type']=='constraint') && (in_array($r['project_preceding_id'],$projectIdsForConstraints))) {
-//						debug(array('constr'=>array($p['Project']['id'],$antiCrash)));
-							//do nothing, check other things.. 
-						}
-						else {
-//							debug(array('break'=>array($p['Project']['id'],$antiCrash)));
-							$addIt = false;
+			foreach ($diffProjects as $project) {
+				$addToList = true;
+				if (in_array($project['Project']['id'],array_keys($relationsList))) {
+					foreach ($relationsList[$project['Project']['id']] as $relation) {
+						if (!(
+							($relation['type']=='req' && in_array($relation['project_preceding_id'],$projectIdsForReqs)) ||
+							($relation['type']=='constraint' && in_array($relation['project_preceding_id'],$projectIdsForConstraints))
+						)) {
+							$addToList = false;
 							break;
-						}							
-					}
-					if ($addIt) {
-						$rounds[$curRound][] = $p;
-						$projectsAdded[] = $p;
-						$addedInThisRound++;
+						}
 					}
 				}
-				else {
-//					debug(array('nothing?'=>array($p['Project']['id'],$antiCrash)));
-					$rounds[$curRound][] = $p;
-					$projectsAdded[] = $p;
-					$addedInThisRound++;
+
+				if ($addToList) {
+					$projectsOfCurrentRound[] = $project;
 				}
 			}
 			
-			if (!$addedInThisRound) {
-//				$rounds[$curRound] = array_unique($rounds[$curRound]);
-
-				$rounds[$curRound] = $this->_removeDuplicates($rounds[$curRound]);
-				$curRound++;
-				$rounds[$curRound] = array();	
+			//nichts zum hinzufügen gefunden?
+			if ($oldProjectsOfCurrentRoundCounter == count($projectsOfCurrentRound)) {
+				$rounds[] = $projectsOfCurrentRound;
+				$usedProjects = $this->_removeDuplicates(array_merge($usedProjects,$projectsOfCurrentRound));
+				$projectsOfCurrentRound = array();
 			}
-//			debug($addedInThisRound);
 		}
-
 //		foreach ($rounds as $rn => $round) {
 //			debug('Round '.$rn);
 //			debug(Set::combine($round,'{n}.Project.id','{n}.Project.name'));
-//		}
+//		}		
 		return $rounds;
-		
 	}
+	
 	function linearizeProject($project) {
 		return (double) $project['costs'];
 	}
@@ -252,6 +221,7 @@ class Project extends AppModel {
 	function _removeDuplicates($projects) {
 		$revArr = array();
 		foreach ($projects as $k=>$project) $revArr[$project['Project']['id']] = $k;
+		
 		$newArr = array();
 		foreach ($revArr as $k) {
 			$newArr[] = $projects[$k];
@@ -260,7 +230,8 @@ class Project extends AppModel {
 	}
 
 	static function _compareProjects($p1,$p2) {
-		return ($p1['Project']['id']==$p2['Project']['id']) ? 0 : 1;
+		if ($p1['Project']['id']==$p2['Project']['id']) return 0;
+		else return ($p1['Project']['id'] < $p2['Project']['id']) ? -1 : 1;
 	}
 }
 ?>

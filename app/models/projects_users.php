@@ -21,12 +21,16 @@ class ProjectsUsers extends AppModel {
 
 		$savArr = array();
 		foreach ($notYetThereProjectIds as $nytpid) {
-			$savArr[] = array(
+			$savArrEntry = array(
 				'project_id' => $nytpid,
 				'user_id' => $userId,
 			);
+//			$savArr[] = $savArrEntry;
+			
+			$this->create();
+			$this->save($savArrEntry);
 		}
-		$this->saveAll($savArr);
+//		$this->saveAll($savArr);
 	}
 
 }

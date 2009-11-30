@@ -2,7 +2,7 @@
 class DATABASE_CONFIG {
 
 	var $default = array(
-		'driver' => 'mysql',
+		'driver' => 'mysqli',
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'root',

@@ -2,3 +2,9 @@
 	border: 1px solid silver;
 	padding: 20px 0;
 }
+span.projectDone {
+	color: #bbb;
+	font-style: italic;
+}
+span.projectNotDone {
+}
