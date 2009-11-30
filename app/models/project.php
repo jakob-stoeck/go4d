@@ -69,10 +69,18 @@ class Project extends AppModel {
         $file = new File(TMP.'graphs'.DS.$userId.'.dot', true);
         $file->write($data);
         $file->close();
+        
         $cmd = 'dot -v -Tpng -o"'.IMAGES.'graphs'.DS.$userId.'.png" -Timap_np -o"'.TMP.'graphs'.DS.$userId.'.map" '.TMP.'graphs'.DS.$userId.'.dot';
         $graphOutput = shell_exec($cmd);
-        debug($graphOutput);
-        return $graphOutput;
+		$fn = IMAGES.'graphs'.DS.$userId.'.png';
+//        header('Content-Length: '.filesize($fn));
+		
+		Configure::write('debug', 0);		
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT', true, 200);
+        header('Content-Type: image/png');
+        print file_get_contents($fn);
+        exit();        
+//      return $graphOutput;
     }
 
 	function getBestPath($userId) {
