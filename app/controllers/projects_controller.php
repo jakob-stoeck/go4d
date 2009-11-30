@@ -133,11 +133,8 @@ class ProjectsController extends AppController {
 			foreach ($rounds as $round) {
 				$detailValues = array();
 				foreach ($round as $project) {
-					if ($detail == 'id') {
-						$detailValues[$project['Project']['id']] = '<span class="projectNotDone">WP000'.$project['Project'][$detail].'</span>';
-					}
-					elseif ($detail=="name") {
-						$detailValues[$project['Project']['id']] = '<span class="projectNotDone" title="'.$project['Project'][$detail].'">'.substr($project['Project'][$detail],0,20).'&hellip;</span>';
+					if ($detail=="name") {
+						$detailValues[$project['Project']['id']] = substr($project['Project'][$detail],0,20);
 					}
 					else {
 						$detailValues[$project['Project']['id']] = $project['Project'][$detail];
