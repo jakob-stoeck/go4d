@@ -160,10 +160,6 @@ class ProjectsController extends AppController {
 			}
 			
 		
-//			$tableRow[] = '
-//Sparky
-//			';
-			
 			if ($sparklineArr) {
 				$max = max($sparklineArr) < 10 ? 10 : max($sparklineArr);
 				$tableRow[] = '<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />';

@@ -15,7 +15,10 @@ class ProjectsUsers extends AppModel {
 		App::import('Model','Project');
 		$projectClass = new Project();
 		$projectIds = $projectClass->find('list',array('fields'=>array('Project.id')));
-		$puProjectIds = $this->find('list',array('fields'=>array('ProjectsUsers.project_id')));
+		$puProjectIds = $this->find('list',array(
+			'conditions' => array('ProjectsUsers.user_id'=>$userId),
+			'fields'=>array('ProjectsUsers.project_id')
+		));
 		
 		$notYetThereProjectIds = array_diff($projectIds,$puProjectIds);
 
@@ -29,7 +32,7 @@ class ProjectsUsers extends AppModel {
 			
 //			$this->create();
 //			$this->save($savArrEntry);
-		}
+		}		
 		$this->saveAll($savArr);
 	}
 
