@@ -18,7 +18,7 @@ class Project extends AppModel {
 
         foreach($projects as $id => $name) {
         	$dotProjectArr = array('label = "WP0'.$id.': '.$name.'"');
-        	
+        	$dotProjectArr[] = 'href="project_'.$id.'_imap"';
         	if ((in_array($id,array_keys($projectAssocs))) && ($projectAssocs[$id]['wanted']==1)) {
         		$dotProjectArr[] = 'color="red"';
         	}
@@ -69,7 +69,7 @@ class Project extends AppModel {
         $file = new File(TMP.'graphs'.DS.$userId.'.dot', true);
         $file->write($data);
         $file->close();
-        $cmd = 'dot -Tpng -v -o"'.IMAGES.'graphs'.DS.$userId.'.png" '.TMP.'graphs'.DS.$userId.'.dot';
+        $cmd = 'dot -v -Tpng -o"'.IMAGES.'graphs'.DS.$userId.'.png" -Timap_np -o"'.TMP.'graphs'.DS.$userId.'.map" '.TMP.'graphs'.DS.$userId.'.dot';
         $graphOutput = shell_exec($cmd);
         debug($graphOutput);
         return $graphOutput;
