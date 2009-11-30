@@ -3,46 +3,76 @@ class Project extends AppModel {
 
 	var $name = 'Project';
 
-
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-//	var $hasMany = array(
-//		'Relation' => array(
-//			'className' => 'Relation',
-//			'foreignKey' => 'project_id'
-//		)
-//	);
-//
-//	var $hasAndBelongsToMany = array(
-//		'User' => array(
-//			'className' => 'User',
-//			'joinTable' => 'projects_users',
-//			'foreignKey' => 'project_id',
-//			'associationForeignKey' => 'user_id',
-//			'unique' => true
-//		)
-//	);
-
-    function dot($projects, $relations, $graphname = 'workpackages') {
+    function dot($projects, $relations, $userId, $calculatedProjectIds,$filtertype = "none") {
         // TODO secure $graphname!
-
-        $data = 'digraph ' . $graphname . ' {'."\n";
+		
+    	App::import('Model','ProjectsUsers'); $projectsUsersClass = new ProjectsUsers();
+    	$projectAssocs = $projectsUsersClass->find('list',array(
+    		'conditions' => array(
+    			'ProjectsUsers.user_id'=>$userId,
+    			'OR' => array('ProjectsUsers.done'=>1,'ProjectsUsers.wanted'=>1)
+    		),
+    		'fields' => array('ProjectsUsers.project_id','ProjectsUsers.wanted')
+    	));
+        $data = 'digraph go4d {'."\n";
 
         foreach($projects as $id => $name) {
-            $data .= $id . ' [label="' . $id . ': ' . $name . '"]'."\n";
+        	$dotProjectArr = array('label = "WP0'.$id.': '.$name.'"');
+        	$dotProjectArr[] = 'href="project_'.$id.'_imap"';
+        	if ((in_array($id,array_keys($projectAssocs))) && ($projectAssocs[$id]['wanted']==1)) {
+        		$dotProjectArr[] = 'color="red"';
+        	}
+        	elseif (in_array($id,array_keys($projectAssocs))) {
+        		$dotProjectArr[] = 'color="green"';
+        	}
+        	elseif (in_array($id,$calculatedProjectIds)) {
+        		$dotProjectArr[] = 'color="black"';
+        	}
+        	else {
+        		if ($filtertype == "focus") {
+	        		$dotProjectArr[] = 'color="#aaaaaa"';
+	        		$dotProjectArr[] = 'fontcolor="#aaaaaa"';
+        		}
+        		elseif ($filtertype == "hide") {
+        			$dotProjectArr = null;
+        		}
+        	}
+        	
+        	if ($dotProjectArr) $data .= $id.' ['.implode(', ',$dotProjectArr).']'.";\n";
+        	
         }
 
         foreach($relations as $r) {
-            $data .= $r['Relation']['project_preceding_id'] . ' -> ' . $r['Relation']['project_id'].($r['Relation']['type']=='constraint'?' [color=green]':'')."\n";
+            $relStart = $r['Relation']['project_preceding_id'] . ' -> ' . $r['Relation']['project_id'];
+            
+            
+            $relData = array('color'=> 'color="#000044"');
+            if ($r['Relation']['type']=='constraint') {
+            	$relData['color'] = 'color="green"';
+            }
+            
+            if (!(
+            	(in_array($r['Relation']['project_preceding_id'],$calculatedProjectIds)) && 
+            	(in_array($r['Relation']['project_id'],$calculatedProjectIds))
+            )) {
+	            if ($filtertype=="focus") {
+	            	$relData = array('color'=> 'color="#aaaaaa"');	
+	            }
+	            elseif ($filtertype=="hide") {
+	            	$relData = null;
+	            }
+            }
+            if ($relData) $data .= $relStart.' ['.implode(', ',$relData)."];\n";
         }
+		$data .= '}';
 
-
-        $file = new File(WWW_ROOT . '/graph/' . $graphname . '.dot', true);
+        $file = new File(TMP.'graphs'.DS.$userId.'.dot', true);
         $file->write($data);
         $file->close();
-
-        $graph = shell_exec('dot -Tpng -o"img/' . $graphname . '.png" graph/' . $graphname . '.dot');
-
-        return $graph;
+        $cmd = 'dot -v -Tpng -o"'.IMAGES.'graphs'.DS.$userId.'.png" -Timap_np -o"'.TMP.'graphs'.DS.$userId.'.map" '.TMP.'graphs'.DS.$userId.'.dot';
+        $graphOutput = shell_exec($cmd);
+        debug($graphOutput);
+        return $graphOutput;
     }
 
 	function getBestPath($userId) {
