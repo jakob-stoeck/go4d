@@ -40,18 +40,9 @@
 	<?=$javascript->link('sparklines')?>	
 </head>
 <body>	
-	<script type="text/javascript">
-		var sparklineOpt = {
-		  "percentage_lines":[0.25,0.5,0.75],"fill_between_percentage_lines":true,
-		  "left_padding":1,"right_padding":1,"top_padding":1,"bottom_padding":1,
-		  "background":"#FFFFFF","stroke":"#444444","percentage_color":"#AAAAFF",
-		  "percentage_fill_color":"#CCCCFF"				
-		};
-	</script>
-	
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $html->link(__('CakePHP: the rapid development php framework', true), 'http://cakephp.org'); ?></h1>
+			<h1><?=$html->link("go4d!", '/'); ?></h1>
 		</div>
 		<div id="content">
 
@@ -61,12 +52,6 @@
 
 		</div>
 		<div id="footer">
-			<?php echo $html->link(
-					$html->image('cake.power.gif', array('alt'=> __("CakePHP: the rapid development php framework", true), 'border'=>"0")),
-					'http://www.cakephp.org/',
-					array('target'=>'_blank'), null, false
-				);
-			?>
 		</div>
 	</div>
 	<?php echo $cakeDebug; ?>
