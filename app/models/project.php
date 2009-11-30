@@ -294,9 +294,31 @@ class Project extends AppModel {
 		return $newArr;
 	}
 
+	function getMatrixNames() {
+    	$matrixNames = array(
+            "entire_bank_process",
+            "entire_bank_knowledge",
+            "entire_bank_risk",
+            "entire_bank_information",
+            "marketing_process",
+            "marketing_knowledge",
+            "marketing_risk",
+            "marketing_information",
+            "production_process",
+            "production_knowledge",
+            "production_risk",
+            "production_information",
+            "it_process",
+            "it_knowledge",
+            "it_risk",
+            "it_information"
+        );
+        return $matrixNames;		
+	}
 	static function _compareProjects($p1,$p2) {
 		if ($p1['Project']['id']==$p2['Project']['id']) return 0;
 		else return ($p1['Project']['id'] < $p2['Project']['id']) ? -1 : 1;
 	}
+	
 }
 ?>

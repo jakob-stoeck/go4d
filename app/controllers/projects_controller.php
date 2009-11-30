@@ -129,26 +129,10 @@ class ProjectsController extends AppController {
     /**
      * Returns an associative array of go4c matrix fields
      */
+	
 	function matrix($projectIds) {
-	    $matrixNames = array(
-            "entire_bank_process",
-            "entire_bank_knowledge",
-            "entire_bank_risk",
-            "entire_bank_information",
-            "marketing_process",
-            "marketing_knowledge",
-            "marketing_risk",
-            "marketing_information",
-            "production_process",
-            "production_knowledge",
-            "production_risk",
-            "production_information",
-            "it_process",
-            "it_knowledge",
-            "it_risk",
-            "it_information"
-        );
-
+	    $matrixNames = $this->Project->getMatrixNames();
+	    
 	    $projects = $this->Project->find(array('Project.id' => $projectIds), $this->Project->sumColumns($matrixNames));
 
 	    return reset($projects);
@@ -164,13 +148,15 @@ class ProjectsController extends AppController {
 			'fields' => array('ProjectsUsers.project_id')
 		));
 
-		$details = array_keys($rounds[0][0]['Project']);
+		$rawDetails = array_keys($rounds[0][0]['Project']);
 
 		$tableHeader = array('Runde');
 		$tableCells = array();
 		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
 		$tableHeader[] = 'Sparkline';
-
+		
+		$matrixNames = $this->Project->getMatrixNames();
+		$details = array_diff($rawDetails,$matrixNames);
 		foreach ($details as $detail) {
 			$tableRow = array($detail);
 
