@@ -150,10 +150,11 @@ class ProjectsController extends AppController {
 
 		$rawDetails = array_keys($rounds[0][0]['Project']);
 
-		$tableHeader = array('Runde');
 		$tableCells = array();
-		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
+
+		$tableHeader = array('Runde');
 		$tableHeader[] = 'Sparkline';
+		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
 		
 		$matrixNames = $this->Project->getMatrixNames();
 		$details = array_diff($rawDetails,$matrixNames);
@@ -188,13 +189,15 @@ class ProjectsController extends AppController {
 				}
 				else {
 					$tableRow[] = implode(', ',$detailValues);
+					$sparklineArr[] = false;
 				}
 			}
 
-
+			
 			if ($sparklineArr) {
 				$max = max($sparklineArr) < 10 ? 10 : max($sparklineArr);
-				$tableRow[] = '<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />';
+				$sparkline = max($sparklineArr) ? array('<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />') : '-';
+				array_splice($tableRow,1,0,$sparkline);
 			}
 			$tableCells[] = $tableRow;
 		}
