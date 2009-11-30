@@ -25,12 +25,12 @@ class ProjectsUsers extends AppModel {
 				'project_id' => $nytpid,
 				'user_id' => $userId,
 			);
-//			$savArr[] = $savArrEntry;
+			$savArr[] = $savArrEntry;
 			
-			$this->create();
-			$this->save($savArrEntry);
+//			$this->create();
+//			$this->save($savArrEntry);
 		}
-//		$this->saveAll($savArr);
+		$this->saveAll($savArr);
 	}
 
 }

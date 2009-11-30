@@ -144,8 +144,9 @@ class Project extends AppModel {
 		return $savedCalculus;
 	}
 	
-	function orderProjects($projectIds) {
+	function orderProjects($projectIds,$userId = null) {
 		App::import('Model','Relation'); $relationClass = new Relation();
+		App::import('Model','ProjectsUsers'); $projectsUsersClass = new ProjectsUsers();
 		
 		$projects = $this->find('all',array('conditions'=> array('Project.id'=>$projectIds)));
 		$relations = $relationClass->find('all',array(
@@ -160,6 +161,28 @@ class Project extends AppModel {
 		$usedProjects = array();
 		$projectsOfCurrentRound = array();
 		$antiCrash = 0;
+		
+		//get data for round 0
+		if ($userId) {
+			$doneProjects = $projectsUsersClass->find('list',array(
+				'conditions' => array(
+					'ProjectsUsers.user_id'=>$userId,
+					'ProjectsUsers.done' => 1
+				),
+				'fields' => array('ProjectsUsers.project_id')
+			));
+			foreach ($projects as $project) {
+				if (in_array($project['Project']['id'],$doneProjects)) {
+					$projectsOfCurrentRound[] = $project;
+				}
+			}
+			if ($projectsOfCurrentRound) {
+				$rounds[] = $projectsOfCurrentRound;
+				$usedProjects = $this->_removeDuplicates(array_merge($usedProjects,$projectsOfCurrentRound));
+				$projectsOfCurrentRound = array();				
+			}
+		}
+		//calculate other rounds
 		while ((count($usedProjects) < count($projectIds)) && ($antiCrash++ < 100)) {
 			
 			$diffProjects = array_udiff(

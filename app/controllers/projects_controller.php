@@ -103,7 +103,7 @@ class ProjectsController extends AppController {
 			$this->ProjectsUsers->saveAll($savArr);
 			$savedCalculus = $this->Project->getBestPath($this->Auth->user('id'));
 		}
-		$rounds = $this->Project->orderProjects($savedCalculus['projectIds']);
+		$rounds = $this->Project->orderProjects($savedCalculus['projectIds'],$this->Auth->user('id'));
 //		debug($rounds);
 		$orderedTableData = $this->_orderForAnalyzeTable($rounds);
 		$this->set(compact('rounds','orderedTableData'));
@@ -122,11 +122,14 @@ class ProjectsController extends AppController {
 		
 		$tableHeader = array('Runde');
 		$tableCells = array();
-		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr+1;
+		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
+		$tableHeader[] = 'Sparkline';
 		
 		foreach ($details as $detail) {
 			$tableRow = array($detail);
 			
+			$sparklineArr = array(); //sparkline goes over multiple rounds..
+
 			foreach ($rounds as $round) {
 				$detailValues = array();
 				foreach ($round as $project) {
@@ -140,7 +143,6 @@ class ProjectsController extends AppController {
 						$detailValues[$project['Project']['id']] = $project['Project'][$detail];
 					}
 				}
-//				debug($detailValues);
 				
 				$detailOutput = null; $correctedDetailOutput = null;
 				if (is_numeric(reset($detailValues))) {
@@ -149,26 +151,23 @@ class ProjectsController extends AppController {
 						$detailOutput += $dv;
 						if (!in_array($pId,$doneProjectIds)) $correctedDetailOutput += $dv;
 					}
-					$tableRow[] = 	'<span class="projectNotDone">'.$correctedDetailOutput.'</span> '.
-									'<span class="projectDone">('.($detailOutput-$correctedDetailOutput).')</span>';
+					$tableRow[] = $detailOutput;
+					$sparklineArr[] = $detailOutput;
 				}
 				else {
-					$correctedDetailOutput = array();
-					foreach ($detailValues as $pId =>$dv) {
-						if (in_array($pId,$doneProjectIds)) {
-							$correctedDetailOutput[] = str_replace('class="projectNotDone"','class="projectDone"',$dv);
-						}
-						else {
-							$correctedDetailOutput[] = $dv;
-						}
-					}
-					$tableRow[] = implode(', ',$correctedDetailOutput);
-				}
-//				$tableRow[] = $detailOutput;
-	//			$tableRow[] = implode($detailValues,', ');
-					
+					$tableRow[] = implode(', ',$detailValues);
+				}					
 			}
 			
+		
+//			$tableRow[] = '
+//Sparky
+//			';
+			
+			if ($sparklineArr) {
+				$max = max($sparklineArr) < 10 ? 10 : max($sparklineArr);
+				$tableRow[] = '<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />';
+			}
 			$tableCells[] = $tableRow;
 		}
 		return compact('tableHeader','tableCells');		
