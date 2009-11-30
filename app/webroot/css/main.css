@@ -8,6 +8,10 @@ span.projectDone {
 }
 span.projectNotDone {
 }
+.matrix {
+	width: 250px;
+}
+
 /*
 span.sparkline {
 	display:none;

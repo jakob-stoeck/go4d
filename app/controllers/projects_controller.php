@@ -2,10 +2,10 @@
 class ProjectsController extends AppController {
 
 	var $name = 'Projects';
-	
-	
+    var $helpers = array('Html', 'Diagram');
+
 	var $uses = array('Project', 'Relation','ProjectsUsers','User');
-	
+
 	function index() {
 		$this->Project->recursive = 0;
 		$this->set('projects', $this->paginate());
@@ -59,7 +59,7 @@ class ProjectsController extends AppController {
 			$this->redirect(array('action'=>'index'));
 		}
 	}
-	
+
     function graph() {
         $projects = $this->Project->findAll(null, null, 'id ASC');
 
@@ -80,7 +80,7 @@ class ProjectsController extends AppController {
 		));
 		$this->set(compact('puProjects'));
 	}
-	
+
 	function analyze() {
 		$user = $this->User->find('first',array(
 			'conditions'=>array('User.id'=>$this->Auth->user('id')),
@@ -88,7 +88,7 @@ class ProjectsController extends AppController {
 		));
 
 		$savedCalculus = unserialize($user['User']['saved_calculus']);
-		
+
 		if ($d =& $this->data) {
 			$savArr = array();
 			foreach ($d['ProjectsUsers'] as $project_id => $puArr) {
@@ -104,12 +104,54 @@ class ProjectsController extends AppController {
 			$savedCalculus = $this->Project->getBestPath($this->Auth->user('id'));
 		}
 		$rounds = $this->Project->orderProjects($savedCalculus['projectIds'],$this->Auth->user('id'));
-//		debug($rounds);
+
+		// extract project ids per round
+		$projectIdsByRound = array();
+		foreach($rounds as $round_id => $round) {
+		    $projectIdsByRound[$round_id] = Set::extract($round, '{n}.Project.id');
+		}
+
+        // make matrix per round
+        $matrix = array();
+        foreach($projectIdsByRound as $round_id => $projectIds) {
+            $matrix[$round_id] = $this->matrix($projectIds);
+        }
+
 		$orderedTableData = $this->_orderForAnalyzeTable($rounds);
-		$this->set(compact('rounds','orderedTableData'));
+
+		$this->set(compact('rounds', 'orderedTableData', 'matrix'));
 	}
+
+    /**
+     * Returns an associative array of go4c matrix fields
+     */
+	function matrix($projectIds) {
+	    $matrixNames = array(
+            "entire_bank_process",
+            "entire_bank_knowledge",
+            "entire_bank_risk",
+            "entire_bank_information",
+            "marketing_process",
+            "marketing_knowledge",
+            "marketing_risk",
+            "marketing_information",
+            "production_process",
+            "production_knowledge",
+            "production_risk",
+            "production_information",
+            "it_process",
+            "it_knowledge",
+            "it_risk",
+            "it_information"
+        );
+
+	    $projects = $this->Project->find(array('Project.id' => $projectIds), $this->Project->sumColumns($matrixNames));
+
+	    return reset($projects);
+	}
+
 	function _orderForAnalyzeTable($rounds) {
-		
+
 		$doneProjectIds = $this->ProjectsUsers->find('list',array(
 			'conditions' => array(
 				'ProjectsUsers.user_id'=>$this->Auth->user('id'),
@@ -117,17 +159,17 @@ class ProjectsController extends AppController {
 			),
 			'fields' => array('ProjectsUsers.project_id')
 		));
-		
+
 		$details = array_keys($rounds[0][0]['Project']);
-		
+
 		$tableHeader = array('Runde');
 		$tableCells = array();
 		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
 		$tableHeader[] = 'Sparkline';
-		
+
 		foreach ($details as $detail) {
 			$tableRow = array($detail);
-			
+
 			$sparklineArr = array(); //sparkline goes over multiple rounds..
 
 			foreach ($rounds as $round) {
@@ -143,7 +185,7 @@ class ProjectsController extends AppController {
 						$detailValues[$project['Project']['id']] = $project['Project'][$detail];
 					}
 				}
-				
+
 				$detailOutput = null; $correctedDetailOutput = null;
 				if (is_numeric(reset($detailValues))) {
 					$detailOutput = 0;
@@ -156,21 +198,21 @@ class ProjectsController extends AppController {
 				}
 				else {
 					$tableRow[] = implode(', ',$detailValues);
-				}					
+				}
 			}
-			
-		
+
+
 //			$tableRow[] = '
 //Sparky
 //			';
-			
+
 			if ($sparklineArr) {
 				$max = max($sparklineArr) < 10 ? 10 : max($sparklineArr);
 				$tableRow[] = '<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />';
 			}
 			$tableCells[] = $tableRow;
 		}
-		return compact('tableHeader','tableCells');		
-	}	
+		return compact('tableHeader','tableCells');
+	}
 }
 ?>
