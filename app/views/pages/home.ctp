@@ -11,6 +11,11 @@
 </head>
 <body>
     <h1>Go4c &lt; Go4d</h1>
-
+	<h2>Aktionen</h2>
+	<ul>
+		<li><?=$html->link('Planen','/projects/plan')?></li>
+		<li><?=$html->link('Letzte Analyse visualisieren','/projects/analyze')?></li>
+		<li><?=$html->link('Aktuellen Graph anzeigen','/projects/graph')?></li>
+	</ul>
 </body>
 </html>

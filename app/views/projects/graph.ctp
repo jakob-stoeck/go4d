@@ -1,1 +1,1 @@
-<img src="/img/<?=$graphname?>.png" alt="Graph">
+<?=$html->image('graphs/'.$graphFilename.'.png')?>
