@@ -3,7 +3,7 @@ class Project extends AppModel {
 
 	var $name = 'Project';
 
-    function dot($projects, $relations, $userId, $calculatedProjectIds,$filtertype = "none") {
+    function dot($projects, $relations, $userId, $calculatedProjectIds,$filtertype = "hide") {
         // TODO secure $graphname!
 		
     	App::import('Model','ProjectsUsers'); $projectsUsersClass = new ProjectsUsers();

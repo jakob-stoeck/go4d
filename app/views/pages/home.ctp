@@ -17,7 +17,7 @@
 		<li><?=$html->link('Letzte Analyse visualisieren','/projects/analyze')?></li>
 		<li>
 			Aktueller Graph
-			(<?=$html->link('nur relevante projekte anzeigen','/projects/graph/hide')?> | 
+			(Neu generieren: <?=$html->link('nur relevante projekte anzeigen','/projects/graph/hide')?> | 
 			<?=$html->link('fokus','/projects/graph/focus')?> | 
 			<?=$html->link('keine filterung','/projects/graph/none')?>)
 		</li>
