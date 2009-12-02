@@ -3,6 +3,9 @@
 	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
+		<td>
+			<?=$diagram->matrix($sumMatrix)?>
+		</td>
 		<? foreach($matrix as $m): ?>
 			<td>
 			<?= $diagram->matrix($m); ?>
