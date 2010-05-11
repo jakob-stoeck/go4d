@@ -117,13 +117,16 @@ class ProjectsController extends AppController {
 
         // make matrix per round
         $matrix = array();
+        $allProjectIds = array();
         foreach($projectIdsByRound as $round_id => $projectIds) {
+        	$allProjectIds = array_merge($allProjectIds,$projectIds);
             $matrix[$round_id] = $this->matrix($projectIds);
         }
-
+		$sumMatrix = $this->matrix($allProjectIds);
+		
 		$orderedTableData = $this->_orderForAnalyzeTable($rounds);
 
-		$this->set(compact('rounds', 'orderedTableData', 'matrix'));
+		$this->set(compact('rounds', 'orderedTableData', 'matrix','sumMatrix'));
 	}
 
     /**
@@ -154,6 +157,7 @@ class ProjectsController extends AppController {
 
 		$tableHeader = array('Runde');
 		$tableHeader[] = 'Sparkline';
+		$tableHeader[] = 'Summe';
 		foreach ($rounds as $rnr => $round) $tableHeader[] = $rnr;
 		
 		$matrixNames = $this->Project->getMatrixNames();
@@ -199,6 +203,17 @@ class ProjectsController extends AppController {
 				$sparkline = max($sparklineArr) ? array('<img src="http://chart.apis.google.com/chart?cht=bvs&chds=0,'.$max.'&chs=200x30&chd=t:'.implode(',',$sparklineArr).'" />') : '-';
 				array_splice($tableRow,1,0,$sparkline);
 			}
+			
+			$sumValue = 0;
+			
+			foreach ($tableRow as $r) {
+				if (is_numeric($r)) {
+					$sumValue+=$r;
+				}
+			}
+			array_splice($tableRow,2,0,$sumValue);
+			
+			
 			$tableCells[] = $tableRow;
 		}
 		return compact('tableHeader','tableCells');
